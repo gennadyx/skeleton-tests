@@ -18,10 +18,10 @@ class FunctionalTest extends TestCase
 {
     use FunctionalTestTrait;
 
-    //public function testMain()
-    //{
-    //    $this->executeTest('main');
-    //}
+    public function testMain()
+    {
+        $this->executeTest('main');
+    }
 
     public function testPhpstorm()
     {

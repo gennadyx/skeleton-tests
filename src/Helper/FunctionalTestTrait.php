@@ -147,6 +147,17 @@ trait FunctionalTestTrait
         }
     }
 
+    protected function findComposerExecutable()
+    {
+        foreach (['/usr/bin/composer', '/usr/local/bin/composer', './composer.phar'] as $item) {
+            if (file_exists($item) && is_file($item)) {
+                return $item;
+            }
+        }
+
+        return 'composer';
+    }
+
     protected function executeTest(string $name, string $chdir = '', $createIdeaPath = false)
     {
         $name .= '_test';
@@ -154,16 +165,17 @@ trait FunctionalTestTrait
         $rootDir = $this->createTestDir($name, $chdir, $createIdeaPath);
 
         chdir($rootDir.$chdir);
+        $_SERVER['argv'][0] = $this->findComposerExecutable();
         CommandHandler::handle($this->event);
 
         $output = $this->io->getOutput();
         static::assertEquals("Build successful!\n", $output, $output);
 
-        //if (is_dir('tests/fixtures/expected/'.$name)) {
-        //    static::assertEqualsDirectory('tests/fixtures/expected/'.$name, $rootDir);
-        //}
-        //
-        //$this->fs->remove($rootDir);
+        if (is_dir('tests/fixtures/expected/'.$name)) {
+            static::assertEqualsDirectory('tests/fixtures/expected/'.$name, $rootDir);
+        }
+
+        $this->fs->remove($rootDir);
     }
 
 
