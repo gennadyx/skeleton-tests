@@ -30,9 +30,8 @@
     },
     "autoload": {
         "psr-4": {
-            "Gennadyx\\Skeleton\\Tests\\": "src",
-            "Gennadyx\\Skeleton\\Tests\\": "tests"
+            "Gennadyx\\Skeleton\\Tests\\": "src"
         }
-    },
+    }
 
 }
