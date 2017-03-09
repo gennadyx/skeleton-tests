@@ -24,19 +24,21 @@ trait FunctionalTestTrait
 
     private static $ideaPathFixture = 'vendor/gennadyx/skeleton-tests/fixtures/.idea/project.iml';
 
+    private static $expectedRoot = 'vendor/gennadyx/skeleton-tests/expected';
+
     private $testDirs;
 
     /**
      * @var Filesystem
      */
     protected $fs;
-    
+
     public static function root()
     {
         if (null === static::$root) {
             static::$root = realpath('.');
         }
-        
+
         return static::$root;
     }
 
@@ -77,6 +79,8 @@ trait FunctionalTestTrait
         $this->event = null;
         $this->io = null;
         $this->fs = null;
+
+        $this->removeTestDirs();
     }
 
     protected function createTestDir(string $name, string $chdir, bool $createIdeaPath): string
@@ -132,6 +136,20 @@ trait FunctionalTestTrait
         );
     }
 
+    protected function removeTestDirs()
+    {
+        $root = static::root();
+        $dirs = array_filter(scandir($root), function (string $dir) {
+            return $dir[-5] === '_test';
+        });
+
+        if (count($dirs) > 0) {
+            $this->fs->remove(array_map(function (string $dir) use ($root) {
+                return sprintf('%s/%s', $root, $dir);
+            }, $dirs));
+        }
+    }
+
     protected function setEnvironmentVars(string $name)
     {
         $vars = [
@@ -171,12 +189,10 @@ trait FunctionalTestTrait
         $output = $this->io->getOutput();
         static::assertEquals("Build successful!\n", $output, $output);
 
-        if (is_dir('tests/fixtures/expected/'.$name)) {
-            static::assertEqualsDirectory('tests/fixtures/expected/'.$name, $rootDir);
+        $expectedDir = sprintf('%s/%s/%s', static::root(), static::$expectedRoot, $name);
+
+        if (is_dir($expectedDir)) {
+            static::assertEqualsDirectory($expectedDir, $rootDir);
         }
-
-        $this->fs->remove($rootDir);
     }
-
-
 }

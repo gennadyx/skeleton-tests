@@ -1,8 +1,8 @@
 {
-    "name": "test_vendor/main_test",
-    "description": "main_test composer package",
-    "keywords": ["main_test"],
-    "homepage": "https://github.com/test_vendor/main_test",
+    "name": "test_vendor/phpstorm_test",
+    "description": "phpstorm_test composer package",
+    "keywords": ["phpstorm_test"],
+    "homepage": "https://github.com/test_vendor/phpstorm_test",
     "license": "MIT",
     "authors": [
         {
@@ -19,12 +19,12 @@
     },
     "autoload": {
         "psr-4": {
-            "TestVendor\\MainTest\\": "src"
+            "TestVendor\\PhpstormTest\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "TestVendor\\MainTest\\Tests\\": "tests"
+            "TestVendor\\PhpstormTest\\Tests\\": "tests"
         }
     },
     "scripts": {
