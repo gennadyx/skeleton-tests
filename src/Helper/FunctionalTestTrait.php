@@ -136,10 +136,10 @@ trait FunctionalTestTrait
     {
         $vars = [
             'vendor' => 'test_vendor',
-            'name' => 'test_'.$name,
+            'name' => $name,
             'author_name' => 'Test Name',
             'author_email' => 'test@test.com',
-            'author_website' => ''
+            'author_homepage' => ''
         ];
 
         foreach ($vars as $k => $v) {
@@ -149,9 +149,8 @@ trait FunctionalTestTrait
 
     protected function executeTest(string $name, string $chdir = '', $createIdeaPath = false)
     {
-        $this->setEnvironmentVars($name);
-
         $name .= '_test';
+        $this->setEnvironmentVars($name);
         $rootDir = $this->createTestDir($name, $chdir, $createIdeaPath);
 
         chdir($rootDir.$chdir);
