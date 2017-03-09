@@ -22,7 +22,7 @@ trait FunctionalTestTrait
 
     private static $root;
 
-    private static $ideaPathFixture = 'tests/fixtures/.idea/project.iml';
+    private static $ideaPathFixture = 'vendor/gennadyx/skeleton-tests/fixtures/.idea/project.iml';
 
     private $testDirs;
 
