@@ -14,7 +14,7 @@
     ],
     "require-dev": {
         "php" : "^7.0|^7.1",
-        "gennadyx/skeleton": "dev-master",
+        "gennadyx/skeleton": "self.version",
         "symfony/serializer": "^3.2",
         "symfony/finder": "^3.2",
         "symfony/filesystem": "^3.2",
@@ -28,10 +28,11 @@
         "phpspec/prophecy": "^1.7",
         "skagarwal/reflection": "^1.0"
     },
-    "autoload-dev": {
+    "autoload": {
         "psr-4": {
+            "Gennadyx\\Skeleton\\Tests\\": "src",
             "Gennadyx\\Skeleton\\Tests\\": "tests"
         }
-    }
+    },
 
 }
