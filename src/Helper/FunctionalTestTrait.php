@@ -85,8 +85,7 @@ trait FunctionalTestTrait
 
     protected function createTestDir(string $name, string $chdir, bool $createIdeaPath): string
     {
-        $root = sprintf('%s/%s', static::root(), $name);
-        $testDir = $root.$chdir;
+        $testDir = sprintf('%s/%s%s', static::root(), $name, $chdir);
         $this->fs->mkdir($testDir);
 
         $finder = new Finder();
@@ -97,16 +96,16 @@ trait FunctionalTestTrait
             ->ignoreDotFiles(false);
 
         foreach ($finder as $item) {
-            if (!$this->isTestDir($root, $item->getRealPath())) {
+            if (!$this->isTestDir($testDir, $item->getRealPath())) {
                 $this->copyToTestDir($item, $testDir);
             }
         }
 
         if ($createIdeaPath) {
-            $this->createProjectIdeaPath($root);
+            $this->createProjectIdeaPath($testDir);
         }
 
-        return $root;
+        return $testDir;
     }
 
     protected function isTestDir(string $root, string $path): bool
@@ -128,8 +127,14 @@ trait FunctionalTestTrait
         );
     }
 
-    protected function createProjectIdeaPath(string $root)
+    protected function createProjectIdeaPath(string $testDir)
     {
+        $root = $testDir;
+
+        if ('composer' === basename($testDir)) {
+            $root = realpath(sprintf('%s/..', $testDir));
+        }
+
         $this->fs->copy(
             realpath(static::$ideaPathFixture),
             sprintf('%s/.idea/%s.iml', $root, basename($root))
@@ -176,7 +181,7 @@ trait FunctionalTestTrait
         $rootDir = $this->createTestDir($name, $chdir, $createIdeaPath);
         $this->testDir = $rootDir;
 
-        chdir($rootDir.$chdir);
+        chdir($rootDir);
         $_SERVER['argv'][0] = $this->findComposerExecutable();
         CommandHandler::handle($this->event);
 
@@ -186,7 +191,7 @@ trait FunctionalTestTrait
         $expectedDir = sprintf('%s/%s/%s', static::root(), static::$expectedRoot, $name);
 
         if (is_dir($expectedDir)) {
-            static::assertEqualsDirectory($expectedDir, $rootDir);
+            static::assertEqualsDirectory($expectedDir, str_replace($chdir, '', $rootDir));
         }
     }
 }
