@@ -41,8 +41,8 @@ class ActionQueueTest extends TestCase
         2 => InstallFiles::class,
         3 => RemoveSkeletonDirectory::class,
         4 => CreateSourceDirectories::class,
-        5 => ComposerInstall::class,
-        6 => PhpstormProjectConfigure::class,
+        5 => PhpstormProjectConfigure::class,
+        6 => ComposerInstall::class,
     ];
 
     public function testSortByPriority()
