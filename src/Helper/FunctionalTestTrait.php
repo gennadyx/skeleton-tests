@@ -140,7 +140,7 @@ trait FunctionalTestTrait
     {
         $root = static::root();
         $dirs = array_filter(scandir($root), function (string $dir) {
-            return $dir[-5] === '_test';
+            return substr($dir, -5) === '_test';
         });
 
         if (count($dirs) > 0) {
