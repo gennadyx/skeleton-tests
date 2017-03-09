@@ -26,7 +26,7 @@ trait FunctionalTestTrait
 
     private static $expectedRoot = 'vendor/gennadyx/skeleton-tests/expected';
 
-    private $testDirs;
+    private $testDir;
 
     /**
      * @var Filesystem
@@ -76,11 +76,11 @@ trait FunctionalTestTrait
      */
     protected function tearDown()
     {
+        $this->removeTestDirs();
+
         $this->event = null;
         $this->io = null;
         $this->fs = null;
-
-        $this->removeTestDirs();
     }
 
     protected function createTestDir(string $name, string $chdir, bool $createIdeaPath): string
@@ -138,15 +138,8 @@ trait FunctionalTestTrait
 
     protected function removeTestDirs()
     {
-        $root = static::root();
-        $dirs = array_filter(scandir($root), function (string $dir) {
-            return substr($dir, -5) === '_test';
-        });
-
-        if (count($dirs) > 0) {
-            $this->fs->remove(array_map(function (string $dir) use ($root) {
-                return sprintf('%s/%s', $root, $dir);
-            }, $dirs));
+        if (null !== $this->testDir) {
+            $this->fs->remove($this->testDir);
         }
     }
 
@@ -181,6 +174,7 @@ trait FunctionalTestTrait
         $name .= '_test';
         $this->setEnvironmentVars($name);
         $rootDir = $this->createTestDir($name, $chdir, $createIdeaPath);
+        $this->testDir = $rootDir;
 
         chdir($rootDir.$chdir);
         $_SERVER['argv'][0] = $this->findComposerExecutable();
