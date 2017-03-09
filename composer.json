@@ -12,7 +12,7 @@
             "homepage": "http://gennadyx.tech"
         }
     ],
-    "require-dev": {
+    "require": {
         "php" : "^7.0|^7.1",
         "gennadyx/skeleton": "dev-master",
         "symfony/serializer": "^3.2",
